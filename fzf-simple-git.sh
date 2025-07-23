@@ -20,7 +20,7 @@ __fsg_awk_commit () {
 }
 
 __fsg_pager_data () {
-  echo "GIT_PAGER='"$(_fsg_pager)"' LESS='-+F'"
+  echo "GIT_PAGER='"$(__fsg_pager)"' LESS='-+F'"
 }
 
 __fsg_pager () {
@@ -65,8 +65,8 @@ __fsg_log () {
     --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
     --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
     --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
-    --preview "echo {} | awk '$(__fsg_awk_commit)' | xargs git show | $(_fsg_pager)" \
-    "$@"
+    --preview "echo {} | awk '$(__fsg_awk_commit)' | xargs git show | $(__fsg_pager)" \
+    "$@" | awk 'match($0, /[a-f0-9]{8}*/) { print substr($0, RSTART, RLENGTH) }'
 }
 
 # USAGE
@@ -100,7 +100,7 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
     local m o
     for o in "$@"; do
       eval "__fsg_$o_widget() {
-        local result=\$(__fsg_$o | __fsg_join | awk 'match(\$0, /[a-f0-9]{8}*/) { print substr(\$0, RSTART, RLENGTH) }');
+        local result=\$(__fsg_$o | __fsg_join);
         zle reset-prompt;
         LBUFFER+=\$result
         }"
