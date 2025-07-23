@@ -118,15 +118,14 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
     setopt localoptions nonomatch
     local m o
     for o in "$@"; do
-      eval "__fsg_$o_widget() {
+      eval "__fsg_${o}_widget() {
         local result=\$(__fsg_$o | __fsg_join);
         zle reset-prompt;
-        LBUFFER+=\$result
-        }"
-      eval "zle -N __fsg_$o_widget"
+        LBUFFER+=\$result }"
+      eval "zle -N __fsg_${o}_widget"
       for m in emacs vicmd viins; do
-        eval "bindkey -M $m '^g^${o[1]}' __fsg_$o_widget"
-        eval "bindkey -M $m '^g${o[1]}' __fsg_$o_widget"
+        eval "bindkey -M $m '^g^${o[1]}' __fsg_${o}_widget"
+        eval "bindkey -M $m '^g${o[1]}' __fsg_${o}_widget"
       done
     done
   }
