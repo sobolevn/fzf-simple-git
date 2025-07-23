@@ -13,7 +13,7 @@ __fsg_git_check () {
   return 1
 }
 
-__fsg_awk_commit () {
+__fsg_awk_log () {
   # Helper script to work with `ctlr+h` git and fzf util:
   # Can't use `{8}` here, because `fzf` uses that for formatting:
   echo 'match($0, /[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/) { printf substr($0, RSTART, RLENGTH) }'
@@ -62,11 +62,27 @@ __fsg_log () {
     --graph "$@" |
   _fsg_fzf \
     --header 'ctrl-h to hide preview, ctrl-s for show, ctrl-d for diff, ctrl-b to open in browser' \
-    --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
-    --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
-    --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_commit)')\")" \
-    --preview "echo {} | awk '$(__fsg_awk_commit)' | xargs git show | $(__fsg_pager)" \
+    --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
+    --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
+    --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
+    --preview "echo {} | awk '$(__fsg_awk_log)' | xargs git show | $(__fsg_pager)" \
     "$@" | awk 'match($0, /[a-f0-9]{8}*/) { print substr($0, RSTART, RLENGTH) }'
+}
+
+__fsg_branch () {
+  __fsg_git_check || return
+
+  git branch \
+    --sort=-committerdate \
+    --sort=-HEAD \
+    --format=$'%(HEAD) %(color:yellow)%(refname:short) %(color:green)(%(committerdate:relative))\t%(color:blue)%(subject)%(color:reset)' |
+  column -ts$'\t' |
+  _fsg_fzf \
+    --header 'ctrl-h to hide preview, ctrl-d for diff, ctrl-b to open in browser' \
+    --bind "ctrl-d:execute:(git diff \$(echo {} | cut -c3- | cut -d' ' -f1))" \
+    --bind "ctrl-b:execute:(gh browse --branch \$(echo {} | cut -c3- | cut -d' ' -f1))" \
+    --preview "git log --oneline --graph --date=short --pretty='format:%C(auto)%cd %h%d %s' \$(echo {} | cut -c3- | cut -d' ' -f1) --" \
+    "$@" | cut -c3- | cut -d' ' -f1
 }
 
 # USAGE
@@ -76,6 +92,9 @@ __fsg_log () {
 # - `ctrl+l` will show the interactive `git log` screen
 # - - from there `ctrl+d` will open a `diff` view since that commit
 # - - from there `ctrl+s` will open that commit with `show`
+# - - from there `ctrl+b` to open in browser (`gh` is required)
+# - `ctrl+b` will show the interactive `git branch` screen
+# - - from there `ctrl+d` will open a `diff` view since that commit
 # - - from there `ctrl+b` to open in browser (`gh` is required)
 #
 # Common controls
@@ -113,4 +132,4 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
   }
 fi
 
-__fsg_init log
+__fsg_init log branch

@@ -5,9 +5,11 @@
 
 ## Features
 
+All commands require `ctrl-g` (for g-it) to be pressed before the actual command.
+
 ### git log
 
-`ctlr-g` + `ctrl-l` (for l-og) opens up `git log` of all commits
+`ctlr-g` + `ctrl-l` (for l-og) opens up `git log` of all commits.
 
 https://github.com/user-attachments/assets/093201a6-3d0c-43ad-b00d-3a27f802bb92
 
@@ -16,8 +18,20 @@ From there:
 - `ctrl-d` (for d-iff) to show `git diff` since that commit
 - `ctrl-b` (for b-rowser) to open GitHub in a browser with the commit, requires [`gh`](https://github.com/cli/cli)
 
-Common keys:
-- `tab` to select multiple entries
+### git branch
+
+`ctlr-g` + `ctrl-b` (for b-ranch) opens `git branch` of recent branches.
+
+https://github.com/user-attachments/assets/ca4bd15b-531b-48e4-8599-b641dd90b8dd
+
+From there:
+- `ctrl-s` (for s-how) to open `git show` for a single commit
+- `ctrl-d` (for d-iff) to show `git diff` since that commit
+- `ctrl-b` (for b-rowser) to open GitHub in a browser with the commit, requires [`gh`](https://github.com/cli/cli)
+
+### Common controlls
+
+- `<tab>` to select multiple entries
 - `ctrl+h` (for h-ide) to hide preview window
 
 
