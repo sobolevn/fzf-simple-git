@@ -9,7 +9,7 @@
 
 `ctlr-g` + `ctrl-l` (for l-og) opens up `git log` of all commits
 
-![demo](https://raw.githubusercontent.com/sobolevn/fzf-simple-git/master/media/demo.mov)
+https://raw.githubusercontent.com/sobolevn/fzf-simple-git/master/media/fzf-simple-git-log.mp4
 
 From there:
 - `ctrl-s` (for s-how) to open `git show` for a single commit
