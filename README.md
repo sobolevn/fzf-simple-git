@@ -55,14 +55,14 @@ With `oh-my-zsh`:
 ## Configuration
 
 You can fully customize how default `fzf` behaves in two ways:
-1. Via `FZF_DEFAULT_OPTS` which are respected, recommended
+1. Via `$FZF_DEFAULT_OPTS` which are respected, recommended
 2. Via redefining `_fsg_fzf` function, it is not recommended, but works
 
 You can customize how `pager` behaves with setting `$FSG_PAGER`
 (defaults to `delta` if installed and to `less` if not).
 
 You can customize `delta`'s syntax theme if it is intalled with `$FSG_BAT_THEME`,
-(defaults to `$BAT_THEME` or `GitHub`).
+(defaults to `$BAT_THEME` or `ansi`).
 
 
 ## License

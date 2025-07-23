@@ -10,6 +10,7 @@
 
 __fsg_git_check () {
   git rev-parse HEAD > /dev/null 2>&1 && return
+  echo 'fzf-simple-git error: not in a git repo' >&2
   return 1
 }
 
@@ -29,7 +30,7 @@ __fsg_pager () {
   fi
 
   if command -v 'delta' >/dev/null 2>&1; then
-    local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
+    local theme="${FSG_BAT_THEME:-${BAT_THEME:-ansi}}"
     echo "delta --syntax-theme="$theme" --paging=always"
   else
     echo 'less'
@@ -90,8 +91,8 @@ __fsg_branch () {
 
 __fsg_help () {
   cat <<'EOF'
-Usage
------
+fzf-simple-git usage
+--------------------
 
 Start by pressing `ctlr-g`, then:
 
