@@ -7,6 +7,10 @@
 
 All commands require `ctrl-g` (for g-it) to be pressed before the actual command.
 
+### help
+
+`ctrl-g` + `ctrl-h` (for h-elp) opens up usage guide.
+
 ### git log
 
 `ctlr-g` + `ctrl-l` (for l-og) opens up `git log` of all commits.

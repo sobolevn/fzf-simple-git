@@ -87,21 +87,33 @@ __fsg_branch () {
 
 # USAGE
 # =====
-#
-# Start by pressing `ctlr-g`, then:
-# - `ctrl+l` will show the interactive `git log` screen
-# - - from there `ctrl+d` will open a `diff` view since that commit
-# - - from there `ctrl+s` will open that commit with `show`
-# - - from there `ctrl+b` to open in browser (`gh` is required)
-# - `ctrl+b` will show the interactive `git branch` screen
-# - - from there `ctrl+d` will open a `diff` view since that commit
-# - - from there `ctrl+b` to open in browser (`gh` is required)
-#
-# Common controls
-# ---------------
-#
-# - `ctrl+a` to select multiple items
-# - `ctrl+h` to toggle preview window
+
+__fsg_help () {
+  cat <<'EOF'
+Usage
+-----
+
+Start by pressing `ctlr-g`, then:
+
+- `ctrl+l` will show the interactive `git log` screen
+- - from there `ctrl+d` will open a `diff` view since that commit
+- - from there `ctrl+s` will open that commit with `show`
+- - from there `ctrl+b` to open in browser (`gh` is required)
+
+- `ctrl+b` will show the interactive `git branch` screen
+- - from there `ctrl+d` will open a `diff` view since that commit
+- - from there `ctrl+b` to open in browser (`gh` is required)
+
+- `ctrl+h` will show this help
+
+Common controls
+---------------
+
+- `ctrl+a` to select multiple items
+- `ctrl+h` to toggle preview window
+
+EOF
+}
 
 if [[ -n "${BASH_VERSION:-}" ]]; then
   echo 'bash is not supported yet'
@@ -116,7 +128,19 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
 
   __fsg_init() {
     setopt localoptions nonomatch
-    local m o
+
+    local m
+    local o='h'
+
+    # Init help:
+    eval "__fsg_help_widget() { zle -M '$(__fsg_help)' }"
+    eval "zle -N __fsg_help_widget"
+    for m in emacs vicmd viins; do
+      eval "bindkey -M $m '^g^${o[1]}' __fsg_help_widget"
+      eval "bindkey -M $m '^g${o[1]}' __fsg_help_widget"
+    done
+
+    # Init commands:
     for o in "$@"; do
       eval "__fsg_${o}_widget() {
         local result=\$(__fsg_$o | __fsg_join);
