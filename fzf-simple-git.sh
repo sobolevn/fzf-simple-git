@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 # === fzf-simple-git ===
 # This is a copy-paste with modifications from
 # https://github.com/junegunn/fzf-git.sh
