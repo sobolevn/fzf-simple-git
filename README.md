@@ -21,6 +21,19 @@ Common keys:
 - `ctrl+h` (for h-ide) to hide preview window
 
 
+## Installation
+
+With [`zplug`](https://github.com/zplug/zplug):
+1. Add `zplug 'sobolevn/fzf-simple-git', depth:1` to your plugin list
+
+With [`antigen`](https://github.com/zsh-users/antigen):
+1. Add `antigen bundle sobolevn/fzf-simple-git` to your plugin list
+
+With `oh-my-zsh`:
+1. `git clone https://github.com/sobolevn/fzf-simple-git.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-simple-git`
+2. Add `fzf-simple-git` to the list of `plugins=(fzf-simple-git, ...)`
+
+
 ## Configuration
 
 You can fully customize how default `fzf` behaves in two ways:
