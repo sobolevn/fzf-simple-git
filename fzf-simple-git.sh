@@ -23,15 +23,20 @@ __fsg_pager_data () {
   echo "GIT_PAGER='"$(_fsg_pager)"' LESS='-+F'"
 }
 
-# API that we allow to override:
+__fsg_pager () {
+  if [[ ! -z "$FSG_PAGER" ]]; then
+    echo "$FSG_PAGER"
+  fi
 
-_fsg_pager () {
   if command -v 'delta' >/dev/null 2>&1; then
-    echo "delta --syntax-theme="$SOBOLE_SYNTAX_THEME" --paging=always"
+    local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
+    echo "delta --syntax-theme="$theme" --paging=always"
   else
     echo 'less'
   fi
 }
+
+# API that we allow to override:
 
 _fsg_fzf () {
   fzf --no-separator \
