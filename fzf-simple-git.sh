@@ -21,7 +21,7 @@ __fsg_awk_log () {
 }
 
 __fsg_pager_data () {
-  echo "GIT_PAGER='"$(__fsg_pager)"' LESS='-+F'"
+  echo "GIT_PAGER='"$(__fsg_pager)"' LESS+=' -+F'"
 }
 
 __fsg_pager () {
@@ -30,7 +30,7 @@ __fsg_pager () {
   fi
 
   if command -v 'delta' >/dev/null 2>&1; then
-    local theme="${FSG_BAT_THEME:-${BAT_THEME:-ansi}}"
+    local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
     echo "delta --syntax-theme="$theme" --paging=always"
   else
     echo 'less'
