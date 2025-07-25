@@ -37,7 +37,7 @@ From there:
 
 `ctrl-g` + `ctrl-f` (for f-files) opens `git ls-files`.
 
-https://github.com/user-attachments/assets/cc249857-f076-4a13-8a39-b73b91043adf
+https://github.com/user-attachments/assets/2e0baad4-ecc8-4c05-b963-59c0653f6869
 
 From there:
 - `ctrl+o` (for o-pen) to open a file in `$EDITOR`
