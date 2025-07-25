@@ -78,11 +78,15 @@ You can fully customize how default `fzf` behaves in two ways:
 1. Via `$FZF_DEFAULT_OPTS` which are respected, recommended
 2. Via redefining `_fsg_fzf` function, it is not recommended, but works
 
-You can customize how `pager` behaves with setting `$FSG_PAGER`
-(defaults to `delta` if installed and to `less` if not).
-
-You can customize `delta`'s syntax theme if it is intalled with `$FSG_BAT_THEME`,
-(defaults to `$BAT_THEME` or `ansi`).
+Env vars:
+- Customize how `pager` behaves with setting `$FSG_PAGER`
+  (defaults to `delta` if installed and to `less` if not)
+- Customize `delta`'s syntax theme if it is intalled with `$FSG_BAT_THEME`,
+  (defaults to `$BAT_THEME` or `ansi`)
+- Customize [command for file preview](https://github.com/sobolevn/dotfiles/blob/master/config/zshenv) via `$FSG_FILE_PREVIEW`,
+  (defaults to `bat` if installed or to `cat` if not)
+- Customize `--ignore-revs-file` filename in `blame` with `$FSG_BLAME_IGNORE_FILE`,
+  (defaults to `.git-blame-ignore-revs`)
 
 
 ## License
