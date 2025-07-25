@@ -8,6 +8,8 @@
 
 # Private API, do not override:
 
+__fsg_path=${(%):-%N}
+
 __fsg_git_check () {
   git rev-parse HEAD > /dev/null 2>&1 && return
   echo 'fzf-simple-git error: not in a git repo' >&2
@@ -46,8 +48,9 @@ _fsg_fzf () {
     --layout reverse \
     --ansi \
     --no-sort \
-    --preview-window 'right,55%' "$@" \
-    --bind 'ctrl-h:change-preview-window(hidden|)'
+    --preview-window 'right,55%' \
+    --bind 'ctrl-h:change-preview-window(hidden|)' \
+    "$@"
 }
 
 # Main:
@@ -86,6 +89,45 @@ __fsg_branch () {
     "$@" | cut -c3- | cut -d' ' -f1
 }
 
+__fsg_files () {
+  __fsg_git_check || return
+
+  local fsg_file_preview
+
+  if [[ -z "$FSG_FILE_PREVIEW" ]]; then
+    fsg_file_preview='cat'
+
+    if command -v 'bat' >/dev/null 2>&1; then
+      fsg_file_preview='bat'
+    fi
+
+    # See source of this function here:
+    # https://github.com/sobolevn/dotfiles/blob/master/config/zshenv
+    if command -v '_fzf_complete_realpath' >/dev/null 2>&1; then
+      fsg_file_preview='_fzf_complete_realpath'
+    fi
+  else
+    fsg_file_preview="$FSG_FILE_PREVIEW"
+  fi
+
+  local query=''
+  local root
+  root="$(git rev-parse --show-toplevel)"
+  if [[ "$root" != "$PWD" ]]; then
+    query='!../ '
+  fi
+
+  git ls-files "$root" |
+  _fsg_fzf \
+    --query "$query" \
+    --header 'ctrl-h for preview, ctlr-l/d for ls / deleted, ctrl-b to open in browser' \
+    --bind 'ctrl-b:execute:(gh browse {})' \
+    --bind 'ctrl-d:reload(git reflog --diff-filter D --pretty="format:" --name-only | sed "/^$/d")' \
+    --bind "ctrl-l:reload(git ls-files "$root")" \
+    --preview "$fsg_file_preview {}" \
+    "$@"
+}
+
 # USAGE
 # =====
 
@@ -103,6 +145,10 @@ Start by pressing `ctlr-g`, then:
 
 - `ctrl+b` will show the interactive `git branch` screen
 - - from there `ctrl+d` will open a `diff` view since that commit
+- - from there `ctrl+b` to open in browser (`gh` is required)
+
+- `ctrl+f` will show the interactive `git ls-files` screen
+- - from there `ctrl+d` to show only deleted files
 - - from there `ctrl+b` to open in browser (`gh` is required)
 
 - `ctrl+h` will show this help
@@ -156,4 +202,4 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
   }
 fi
 
-__fsg_init log branch
+__fsg_init log branch files
