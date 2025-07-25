@@ -33,10 +33,30 @@ From there:
 - `ctrl-d` (for d-iff) to show `git diff` since that commit
 - `ctrl-b` (for b-rowser) to open GitHub in a browser with the commit, requires [`gh`](https://github.com/cli/cli)
 
+### git files and git blame
+
+`ctrl-g` + `ctrl-f` (for f-files) opens `git ls-files`.
+
+https://github.com/user-attachments/assets/cc249857-f076-4a13-8a39-b73b91043adf
+
+From there:
+- `ctrl+o` (for o-pen) to open a file in `$EDITOR`
+- `ctrl+b` (for b-rowser) to open in browser (`gh` is required)
+- `ctrl+d` (for d-eleted) to show deleted files
+- `ctrl+r` (for r-eload) to reload files
+- `ctrl+j` (for j-ump to blame) to show `git blame` for this file
+
+This view has its own features:
+- `ctrl+s` (for s-how) to open that commit with `show`
+- `ctrl+j` (for j-ump to blame)  to show the `git blame` before the selected commit
+- `ctrl+r` (for r-eload) to reload `git blame` for this file
+- `ctrl+b` (for b-rowser) to open in browser (`gh` is required)
+
 ### Common controlls
 
 - `<tab>` to select multiple entries
 - `ctrl+h` (for h-ide) to hide preview window
+- `ctrl+]` to show help in a preview window
 
 
 ## Installation

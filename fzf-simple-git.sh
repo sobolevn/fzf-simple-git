@@ -4,54 +4,12 @@
 # This is a copy-paste with modifications from
 # https://github.com/junegunn/fzf-git.sh
 # Which is cool, but very complex for my use-case,
-# I only need commit log with interactive diffs.
+# I only need simple stuff with interactivity.
 
 # Private API, do not override:
 
-__fsg_path=${(%):-%N}
-
-__fsg_git_check () {
-  git rev-parse HEAD > /dev/null 2>&1 && return
-  echo 'fzf-simple-git error: not in a git repo' >&2
-  return 1
-}
-
-__fsg_awk_log () {
-  # Helper script to work with `ctlr+h` git and fzf util:
-  # Can't use `{8}` here, because `fzf` uses that for formatting:
-  echo 'match($0, /[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/) { printf substr($0, RSTART, RLENGTH) }'
-}
-
-__fsg_pager_data () {
-  echo "GIT_PAGER='"$(__fsg_pager)"' LESS+=' -+F'"
-}
-
-__fsg_pager () {
-  if [[ ! -z "$FSG_PAGER" ]]; then
-    echo "$FSG_PAGER"
-  fi
-
-  if command -v 'delta' >/dev/null 2>&1; then
-    local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
-    echo "delta --syntax-theme="$theme" --paging=always"
-  else
-    echo 'less'
-  fi
-}
-
-# API that we allow to override:
-
-_fsg_fzf () {
-  fzf --no-separator \
-    --multi \
-    --min-height 30 \
-    --layout reverse \
-    --ansi \
-    --no-sort \
-    --preview-window 'right,55%' \
-    --bind 'ctrl-h:change-preview-window(hidden|)' \
-    "$@"
-}
+__fsg_path="${(%):-%N}"
+source "${__fsg_path:A:h}/fzf-simple-git-common.sh"
 
 # Main:
 
@@ -65,10 +23,9 @@ __fsg_log () {
     --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" \
     --graph "$@" |
   _fsg_fzf \
-    --header 'ctrl-h to hide preview, ctrl-s for show, ctrl-d for diff, ctrl-b to open in browser' \
     --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
     --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
-    --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
+    --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_log)')\" &)" \
     --preview "echo {} | awk '$(__fsg_awk_log)' | xargs git show | $(__fsg_pager)" \
     "$@" | awk 'match($0, /[a-f0-9]{8}*/) { print substr($0, RSTART, RLENGTH) }'
 }
@@ -82,9 +39,8 @@ __fsg_branch () {
     --format=$'%(HEAD) %(color:yellow)%(refname:short) %(color:green)(%(committerdate:relative))\t%(color:blue)%(subject)%(color:reset)' |
   column -ts$'\t' |
   _fsg_fzf \
-    --header 'ctrl-h to hide preview, ctrl-d for diff, ctrl-b to open in browser' \
     --bind "ctrl-d:execute:(git diff \$(echo {} | cut -c3- | cut -d' ' -f1))" \
-    --bind "ctrl-b:execute:(gh browse --branch \$(echo {} | cut -c3- | cut -d' ' -f1))" \
+    --bind "ctrl-b:execute:(gh browse --branch \$(echo {} | cut -c3- | cut -d' ' -f1) &)" \
     --preview "git log --oneline --graph --date=short --pretty='format:%C(auto)%cd %h%d %s' \$(echo {} | cut -c3- | cut -d' ' -f1) --" \
     "$@" | cut -c3- | cut -d' ' -f1
 }
@@ -113,17 +69,18 @@ __fsg_files () {
   local query=''
   local root
   root="$(git rev-parse --show-toplevel)"
-  if [[ "$root" != "$PWD" ]]; then
+  if [[ "${root:u}" != "${PWD:u}" ]]; then
     query='!../ '
   fi
 
   git ls-files "$root" |
   _fsg_fzf \
     --query "$query" \
-    --header 'ctrl-h for preview, ctlr-l/d for ls / deleted, ctrl-b to open in browser' \
-    --bind 'ctrl-b:execute:(gh browse {})' \
+    --bind 'ctrl-b:execute:(gh browse {} &)' \
+    --bind 'ctrl-e:execute:($EDITOR {})' \
     --bind 'ctrl-d:reload(git reflog --diff-filter D --pretty="format:" --name-only | sed "/^$/d")' \
-    --bind "ctrl-l:reload(git ls-files "$root")" \
+    --bind "ctrl-r:reload(git ls-files "$root")" \
+    --bind "ctrl-j:become(source "${__fsg_path:A:h}/fzf-simple-git-subs.sh"; __fsg_blame {})" \
     --preview "$fsg_file_preview {}" \
     "$@"
 }
@@ -132,34 +89,7 @@ __fsg_files () {
 # =====
 
 __fsg_help () {
-  cat <<'EOF'
-fzf-simple-git usage
---------------------
-
-Start by pressing `ctlr-g`, then:
-
-- `ctrl+l` will show the interactive `git log` screen
-- - from there `ctrl+d` will open a `diff` view since that commit
-- - from there `ctrl+s` will open that commit with `show`
-- - from there `ctrl+b` to open in browser (`gh` is required)
-
-- `ctrl+b` will show the interactive `git branch` screen
-- - from there `ctrl+d` will open a `diff` view since that commit
-- - from there `ctrl+b` to open in browser (`gh` is required)
-
-- `ctrl+f` will show the interactive `git ls-files` screen
-- - from there `ctrl+d` to show only deleted files
-- - from there `ctrl+b` to open in browser (`gh` is required)
-
-- `ctrl+h` will show this help
-
-Common controls
----------------
-
-- `ctrl+a` to select multiple items
-- `ctrl+h` to toggle preview window
-
-EOF
+  __fsg_print_help
 }
 
 if [[ -n "${BASH_VERSION:-}" ]]; then
