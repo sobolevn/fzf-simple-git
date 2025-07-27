@@ -25,7 +25,7 @@ __fsg_log () {
   _fsg_fzf \
     --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
     --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
-    --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_log)')\" &)" \
+    --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli \"\$(echo {} | awk '$(__fsg_awk_log)')\" &)" \
     --preview "echo {} | awk '$(__fsg_awk_log)' | xargs git show | $(__fsg_pager)" \
     "$@" | awk 'match($0, /[a-f0-9]{8}*/) { print substr($0, RSTART, RLENGTH) }'
 }
@@ -40,7 +40,7 @@ __fsg_branch () {
   column -ts$'\t' |
   _fsg_fzf \
     --bind "ctrl-d:execute:(git diff \$(echo {} | cut -c3- | cut -d' ' -f1))" \
-    --bind "ctrl-b:execute:(gh browse --branch \$(echo {} | cut -c3- | cut -d' ' -f1) &)" \
+    --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli --branch \$(echo {} | cut -c3- | cut -d' ' -f1) &)" \
     --preview "git log --oneline --graph --date=short --pretty='format:%C(auto)%cd %h%d %s' \$(echo {} | cut -c3- | cut -d' ' -f1) --" \
     "$@" | cut -c3- | cut -d' ' -f1
 }
@@ -76,7 +76,7 @@ __fsg_file () {
   git ls-files "$root" |
   _fsg_fzf \
     --query "$query" \
-    --bind 'ctrl-b:execute:(gh browse {} &)' \
+    --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli {} &)" \
     --bind 'ctrl-e:execute:($EDITOR {})' \
     --bind 'ctrl-d:reload(git reflog --diff-filter D --pretty="format:" --name-only | sed "/^$/d")' \
     --bind "ctrl-r:reload(git ls-files "$root")" \
@@ -91,7 +91,7 @@ __fsg_tag () {
   git tag --sort -version:refname |
   _fsg_fzf \
     --bind 'ctrl-d:execute:(git diff {})' \
-    --bind 'ctrl-b:execute:(gh browse {} &)' \
+    --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli {} &)" \
     --preview "git -c log.showSignature=false show {} | $(__fsg_pager)" \
     "$@"
 }

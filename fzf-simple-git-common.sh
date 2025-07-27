@@ -106,4 +106,13 @@ _fsg_fzf () {
     "$@"
 }
 
+_fzf_git_cli () {
+  # We use https://github.com/cli/cli by default, but we allow
+  # to override this function. For example, it makes sense to use
+  # https://gitlab.com/gitlab-org/cli for GitLab.
+  # You can decide that based on `git remote get-url <origin>` output.
+  # Or based on passed arguments. Do whatever you please :)
+  gh browse "$@"
+}
+
 export _FSG_HEADER

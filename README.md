@@ -88,6 +88,10 @@ You can fully customize how default `fzf` behaves in two ways:
 1. Via `$FZF_DEFAULT_OPTS` which are respected, recommended
 2. Via redefining `_fsg_fzf` function, it is not recommended, but works
 
+You can customize how `ctlr-b` works with `_fzf_git_cli` function redefinition.
+For example, you can use [GitLab CLI](https://gitlab.com/gitlab-org/cli) if that's common for you.
+Or decide based on the origin URL. Or provided other options.
+
 Env vars:
 - Customize how `pager` behaves with setting `$FSG_PAGER`
   (defaults to `delta` if installed and to `less` if not)
