@@ -45,7 +45,7 @@ __fsg_branch () {
     "$@" | cut -c3- | cut -d' ' -f1
 }
 
-__fsg_files () {
+__fsg_file () {
   __fsg_git_check || return
 
   local fsg_file_preview
@@ -80,8 +80,19 @@ __fsg_files () {
     --bind 'ctrl-e:execute:($EDITOR {})' \
     --bind 'ctrl-d:reload(git reflog --diff-filter D --pretty="format:" --name-only | sed "/^$/d")' \
     --bind "ctrl-r:reload(git ls-files "$root")" \
-    --bind "ctrl-j:become(source "${__fsg_path:A:h}/fzf-simple-git-subs.sh"; __fsg_blame {})" \
+    --bind "ctrl-j:become(source "${__fsg_path:A:h}/fzf-simple-git-blame.sh"; __fsg_blame {})" \
     --preview "$fsg_file_preview {}" \
+    "$@"
+}
+
+__fsg_tag () {
+  __fsg_git_check || return
+
+  git tag --sort -version:refname |
+  _fsg_fzf \
+    --bind 'ctrl-d:execute:(git diff {})' \
+    --bind 'ctrl-b:execute:(gh browse {} &)' \
+    --preview "git -c log.showSignature=false show {} | $(__fsg_pager)" \
     "$@"
 }
 
@@ -107,14 +118,13 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
     setopt localoptions nonomatch
 
     local m
-    local o='h'
 
     # Init help:
-    eval "__fsg_help_widget() { zle -M '$(__fsg_help)' }"
+    eval "__fsg_help_widget() { __fsg_help; zle reset-prompt }"
     eval "zle -N __fsg_help_widget"
     for m in emacs vicmd viins; do
-      eval "bindkey -M $m '^g^${o[1]}' __fsg_help_widget"
-      eval "bindkey -M $m '^g${o[1]}' __fsg_help_widget"
+      eval "bindkey -M $m '^g^]' __fsg_help_widget"
+      eval "bindkey -M $m '^g]' __fsg_help_widget"
     done
 
     # Init commands:
@@ -132,4 +142,4 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
   }
 fi
 
-__fsg_init log branch files
+__fsg_init log branch file tag

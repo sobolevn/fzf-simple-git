@@ -9,7 +9,7 @@ All commands require `ctrl-g` (for g-it) to be pressed before the actual command
 
 ### help
 
-`ctrl-g` + `ctrl-h` (for h-elp) opens up usage guide.
+`ctrl-g` + `ctrl-]` opens up usage guide.
 
 ### git log
 
@@ -31,7 +31,17 @@ https://github.com/user-attachments/assets/ca4bd15b-531b-48e4-8599-b641dd90b8dd
 From there:
 - `ctrl-s` (for s-how) to open `git show` for a single commit
 - `ctrl-d` (for d-iff) to show `git diff` since that commit
-- `ctrl-b` (for b-rowser) to open GitHub in a browser with the commit, requires [`gh`](https://github.com/cli/cli)
+- `ctrl-b` (for b-rowser) to open GitHub in a browser with the branch, requires [`gh`](https://github.com/cli/cli)
+
+### git tags
+
+`ctlr-g` + `ctrl-t` (for t-ags) opens `git tag` of all tags.
+
+https://github.com/user-attachments/assets/018359c1-1d23-4847-823d-7229c6ecc7b0
+
+From there:
+- `ctrl-d` (for d-iff) to show `git diff` since that commit
+- `ctrl-b` (for b-rowser) to open GitHub in a browser with the tag, requires [`gh`](https://github.com/cli/cli)
 
 ### git files and git blame
 
@@ -50,7 +60,7 @@ This view has its own features:
 - `ctrl+s` (for s-how) to open that commit with `show`
 - `ctrl+j` (for j-ump to blame)  to show the `git blame` before the selected commit
 - `ctrl+r` (for r-eload) to reload `git blame` for this file
-- `ctrl+b` (for b-rowser) to open in browser (`gh` is required)
+- `ctrl+b` (for b-rowser) to open the commit in a browser, requires [`gh`](https://github.com/cli/cli)
 
 ### Common controlls
 

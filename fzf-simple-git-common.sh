@@ -25,22 +25,15 @@ __fsg_pager () {
 
   if command -v 'delta' >/dev/null 2>&1; then
     local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
-    echo "delta --syntax-theme="$theme" --paging=always"
+    echo "delta --syntax-theme='"$theme"' --paging=always"
   else
     echo 'less'
   fi
 }
 
-__fsg_print_help () {
-  local width="${FZF_PREVIEW_COLUMNS:-120}"
-  local cmd
-  if command -v 'bat' >/dev/null 2>&1; then
-    cmd="bat --wrap=character --terminal-width="$width""
-  else
-    cmd='cat'
-  fi
+__fsg_help_text=$(cat <<'EOF'
 
-  eval "$cmd | fold -w "$width"" <<'EOF'
+
 fzf-simple-git usage
 --------------------
 
@@ -52,6 +45,10 @@ Start by pressing `ctlr-g` in a <git repo>, then:
 - - `ctrl+b` to open in browser (`gh` is required)
 
 - `ctrl+b` to show the interactive `git branch` screen
+- - `ctrl+d` to open a `diff` view since that commit
+- - `ctrl+b` to open in browser (`gh` is required)
+
+- `ctrl+t` to show the interactive `git tag` screen
 - - `ctrl+d` to open a `diff` view since that commit
 - - `ctrl+b` to open in browser (`gh` is required)
 
@@ -71,7 +68,24 @@ Common controls
 
 - `ctrl+h` to toggle preview window
 - `ctrl+]` to see this help
+
+Enjoy!
 EOF
+)
+
+__fsg_print_help () {
+  local cmd
+  if command -v 'bat' >/dev/null 2>&1; then
+    cmd="bat -l markdown --paging=never --style=plain --color=always"
+  else
+    cmd='cat'
+  fi
+
+  if [ ! -z "$FZF_PREVIEW_COLUMNS" ]; then
+    cmd="fold -s -w "$FZF_PREVIEW_COLUMNS" | $cmd"
+  fi
+
+  echo "$__fsg_help_text" | eval "$cmd"
 }
 
 # API that we allow to override:

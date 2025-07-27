@@ -35,8 +35,8 @@ __fsg_blame () {
   _fsg_fzf \
     --bind "ctrl-s:execute:($(__fsg_pager_data) git show \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
     --bind "ctrl-b:execute:(gh browse \"\$(echo {} | awk '$(__fsg_awk_log)')\")" \
-    --bind "ctrl-j:reload(source "${__fsg_path:A:h}/fzf-simple-git-subs.sh"; eval \"\$(__fsg_blame_cmd "$1" \"\$(echo {} | awk '$(__fsg_awk_log)')\")\")" \
-    --bind "ctrl-r:reload(source "${__fsg_path:A:h}/fzf-simple-git-subs.sh"; eval \"\$(__fsg_blame_cmd "$1")\")" \
+    --bind "ctrl-j:reload(source "${__fsg_path:A:h}/fzf-simple-git-blame.sh"; eval \"\$(__fsg_blame_cmd "$1" \"\$(echo {} | awk '$(__fsg_awk_log)')\")\")" \
+    --bind "ctrl-r:reload(source "${__fsg_path:A:h}/fzf-simple-git-blame.sh"; eval \"\$(__fsg_blame_cmd "$1")\")" \
     --preview "echo {} | awk '$(__fsg_awk_log)' | xargs git show | $(__fsg_pager)" |
   awk 'match($0, /[a-f0-9]{8}*/) { print substr($0, RSTART, RLENGTH) }'
 }
