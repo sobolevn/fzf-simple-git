@@ -25,7 +25,8 @@ __fsg_pager () {
 
   if command -v 'delta' >/dev/null 2>&1; then
     local theme="${FSG_BAT_THEME:-${BAT_THEME:-GitHub}}"
-    echo "delta --syntax-theme='"$theme"' --paging=always"
+    # Theme name can contain spaces, so extra escaping is needed.
+    echo "delta --syntax-theme=\""$theme"\" --paging=always"
   else
     echo 'less'
   fi
@@ -46,10 +47,12 @@ Start by pressing `ctlr-g` in a <git repo>, then:
 
 - `ctrl+b` to show the interactive `git branch` screen
 - - `ctrl+d` to open a `diff` view since that commit
+- - `ctrl+s` to open the latest commit in branch tag with `show`
 - - `ctrl+b` to open in browser (`gh` is required)
 
 - `ctrl+t` to show the interactive `git tag` screen
 - - `ctrl+d` to open a `diff` view since that commit
+- - `ctrl+s` to open the latest commit in this tag with `show`
 - - `ctrl+b` to open in browser (`gh` is required)
 
 - `ctrl+f` to show files that are tracked by `git ls-files`

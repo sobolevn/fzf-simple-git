@@ -29,7 +29,7 @@ From there:
 https://github.com/user-attachments/assets/ca4bd15b-531b-48e4-8599-b641dd90b8dd
 
 From there:
-- `ctrl-s` (for s-how) to open `git show` for a single commit
+- `ctrl-s` (for s-how) to open `git show` for the latest commit in that branch
 - `ctrl-d` (for d-iff) to show `git diff` since that commit
 - `ctrl-b` (for b-rowser) to open GitHub in a browser with the branch, requires [`gh`](https://github.com/cli/cli)
 
@@ -40,6 +40,7 @@ From there:
 https://github.com/user-attachments/assets/018359c1-1d23-4847-823d-7229c6ecc7b0
 
 From there:
+- `ctrl-s` (for s-how) to open `git show` for the latest commit in that tag
 - `ctrl-d` (for d-iff) to show `git diff` since that commit
 - `ctrl-b` (for b-rowser) to open GitHub in a browser with the tag, requires [`gh`](https://github.com/cli/cli)
 

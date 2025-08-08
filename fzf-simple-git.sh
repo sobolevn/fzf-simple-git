@@ -39,7 +39,8 @@ __fsg_branch () {
     --format=$'%(HEAD) %(color:yellow)%(refname:short) %(color:green)(%(committerdate:relative))\t%(color:blue)%(subject)%(color:reset)' |
   column -ts$'\t' |
   _fsg_fzf \
-    --bind "ctrl-d:execute:(git diff \$(echo {} | cut -c3- | cut -d' ' -f1))" \
+    --bind "ctrl-s:execute:($(__fsg_pager_data) git show \$(echo {} | cut -c3- | cut -d' ' -f1))" \
+    --bind "ctrl-d:execute:($(__fsg_pager_data) git diff \$(echo {} | cut -c3- | cut -d' ' -f1))" \
     --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli --branch \$(echo {} | cut -c3- | cut -d' ' -f1) &)" \
     --preview "git log --oneline --graph --date=short --pretty='format:%C(auto)%cd %h%d %s' \$(echo {} | cut -c3- | cut -d' ' -f1) --" \
     "$@" | cut -c3- | cut -d' ' -f1
@@ -90,7 +91,8 @@ __fsg_tag () {
 
   git tag --sort -version:refname |
   _fsg_fzf \
-    --bind 'ctrl-d:execute:(git diff {})' \
+    --bind 'ctrl-d:execute:($(__fsg_pager_data) git diff {})' \
+    --bind 'ctrl-d:execute:($(__fsg_pager_data) git show {})' \
     --bind "ctrl-b:execute:(source "${__fsg_path:A:h}/fzf-simple-git-common.sh" && _fzf_git_cli {} &)" \
     --preview "git -c log.showSignature=false show {} | $(__fsg_pager)" \
     "$@"
